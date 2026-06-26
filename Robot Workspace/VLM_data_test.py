@@ -14,6 +14,16 @@ app = Flask(__name__)
 CONTROL_SERVICE_URL = "http://localhost:5051/action"
 
 # === CONFIG ===
+""" [HOW TO USE]
+Keyboard functions should be mapped to the data point that labels the image/ frame that is being captured 
+Actions can include the predefined modes such as SIT, STAND, WAVE, DANCE, etc., 
+
+Frames/ photos can later be dispatched as single or mutiple image to 
+1. train a VLM model to better decided which action to execute 
+2. set to a preexesiting VLM model and they can decided which action to execute 
+
+"""
+
 DATASET_DIR = "dataset"
 ACTION_MAP = {
     'w': ("FORWARD",     "forward"),
@@ -28,7 +38,7 @@ ACTION_MAP = {
 # === GLOBAL STATE ===
 pipeline = None
 align = None
-yolo_model = None
+# yolo_model = None
 dataset_log = []
 frame_idx = 0
 latest_color = None
@@ -127,7 +137,7 @@ def index():
     return render_template_string("""
     <html>
     <head>
-        <title>Smart Recorder</title>
+        <title>Data Recorder</title>
         <style>
             body { font-family: monospace; text-align: center; background: #222; color: #fff; }
             img { width: 80%; border: 3px solid #444; border-radius: 10px; }
@@ -137,7 +147,7 @@ def index():
         </style>
     </head>
     <body>
-        <h1>📹 AI Data Recorder</h1>
+        <h1>GO2 Data Recorder</h1>
         <img src="/video_feed" />
         <div class="controls">
             <div class="keys">
@@ -235,7 +245,7 @@ if __name__ == "__main__":
     load_existing_dataset()
 
     pipeline = init_camera()
-    yolo_model = YOLO('yolov8n.pt') # Load model once at startup
+    # yolo_model = YOLO('yolov8n.pt') # Load model once at startup, nano is the fastest 
     
     try:
         print("Starting Web Server. Go to http://<ROBOT_IP>:5000")
